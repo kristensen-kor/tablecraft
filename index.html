@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Tablecraft</title>
+	<link rel="stylesheet" href="style.css">
+	<script type="module" src="main.js"></script>
+</head>
+<body>
+	<header>
+		<h1>
+			<a href="/">▢</a>
+			<a href="">Tablecraft</a>
+		</h1>
+	</header>
+
+	<grid-rows id="app" gap="1rem" template="auto 1fr">
+		<file-reader v-if="dataset === null" @file-read="handleFileRead"></file-reader>
+		<flex-row v-if="dataset !== null" justify="space-between" align="center">
+			<h2>{{ dataset.name }}</h2>
+			<button @click="read_new_dataset">Open new dataset</button>
+		</flex-row>
+
+		<grid-cols v-if="dataset !== null" class="main-layout" gap="2rem" template="2fr 3fr">
+			<controls @calc-table-event="calc_table" :var_list="dataset.var_list" :var_full_label="dataset.var_full_label" :var_type="dataset.var_type"></controls>
+
+			<grid-rows class="output" gap="0.5rem" template="auto 1fr">
+				<flex-col gap="0.5rem">
+					<flex-row gap="0.5rem">
+						<button @click="download" :disabled="calculating_table || table_data == null">Download</button>
+						<button @click="reset_table" :disabled="table_data == null">Clear table</button>
+					</flex-row>
+					<!-- <flex-row gap="0.5rem" justify="space-between" align="center"> -->
+					<flex-row v-if="calculating_table" gap="0.5rem" justify="space-between" align="center">
+					<!-- <grid-cols template="1fr auto"> -->
+					<!-- <grid-cols v-if="calculating_table" template="1fr auto"> -->
+						<progress v-if="progress.total != 0" :value="progress.current" :max="progress.total" style="flex: 1;"></progress>
+						<!-- <progress value="75" :max="100" style="flex: 1;"></progress> -->
+						<span>{{ progress.current }} / {{ progress.total }}</span>
+					<!-- </grid-cols> -->
+					</flex-row>
+				</flex-col>
+				<div class="main-output" gap="1rem">
+					<table v-if="table_data !== null" id="export_table">
+						<tr v-for="(row, i) in table_data.col_header">
+							<th v-for="(cell, j) in row" :title="cell" :class="[`col_header_${i + 1}`, table_data.col_header[0][j + 1] != '' ? 'new_var_border' : undefined]">{{ cell }}</th>
+						</tr>
+						<tr v-for="row in table_data.table">
+							<td v-for="(cell, j) in row" :class="[cell.style, table_data.col_header[0][j + 1] != '' ? 'new_var_border' : undefined]" :title="j < 4 ? cell.value : undefined">{{ cell.value }}</td>
+						</tr>
+					</table>
+				</div>
+			</grid-rows>
+		</grid-cols>
+	</grid-rows>
+
+</body>
+</html>
+
+
+<template id="controls-template">
+	<flex-col class="controls-grid" gap="1rem" justify="space-between">
+		<grid-cols class="variables-block" gap="0.5rem" template="3fr 2fr">
+
+			<!-- <flex-col class="variables-left" gap="1rem"> -->
+			<grid-rows class="variables-left" gap="1rem" template="2fr 1fr">
+
+				<grid-rows class="variables-selector" gap="0.5rem" template="auto 1fr auto">
+				<!-- <flex-col class="variables-selector" gap="0.5rem"> -->
+					<flex-row justify="space-between" align="center">
+						<h3>Variables</h3>
+						<div class="search-input-wrapper">
+							<input type="text" v-model="search_term" placeholder="🔎"></input>
+							<button :class="{ visibility_hidden: !search_term }" @click="clear_search">X</button>
+						</div>
+					</flex-row>
+					<select multiple v-model="selectedVariables" @keydown.enter="addToRows" @keydown.right.prevent="addToColumns">
+						<option v-for="(variable, index) in filtered_var_list" :key="variable" :value="variable" @dblclick="add_row(variable)">
+							{{ var_full_label[variable] }}
+						</option>
+					</select>
+					<flex-row justify="space-between" align="center">
+						<button @click="clear_variables">Clear</button>
+						<button @click="switch_quick_preview">{{ quick_preview_visible ? "Hide Quick Preview" : "Show Quick Preview" }}</button>
+					</flex-row>
+				<!-- </flex-col> -->
+				</grid-rows>
+
+				<quick_preview v-if="quick_preview_visible" :variables="selectedVariables"></quick_preview>
+
+			<!-- </flex-col> -->
+			</grid-rows>
+
+
+			<grid-rows class="variables-right" gap="1rem" template="1fr 3fr">
+
+				<component_generic_selector title="Columns" comp_class="cols-selector" def_item="total" v-model:ref_items="cols">
+					<button @click="addToColumns">></button>
+				</component_generic_selector>
+
+				<component_generic_selector title="Rows" comp_class="rows-selector" v-model:ref_items="rows">
+					<button @click="addToRows">></button>
+				</component_generic_selector>
+
+			</grid-rows>
+
+		</grid-cols>
+
+		<button class="calc-button" @click="calc_table" :disabled="rows.length == 0 || cols.length == 0">Calc</button>
+	</flex-col>
+</template>
+
+<template id="qtable-template">
+	<grid-rows class="quick-preview" gap="0.5rem" template="auto 1fr">
+		<h3>Quick Preview</h3>
+		<div class="preview-table-container">
+			<div v-if="qtable !== null">
+				<div>{{ qtable.name }}</div>
+				<br>
+				<table v-if="qtable.table_type == 'categorical'">
+					<tr class="underline_row">
+						<td class="al_right"></td>
+						<td>{{ qtable.type }}</td>
+						<td class="al_right">%</td>
+						<td class="al_right">Count</td>
+					</tr>
+					<tr class="underline_row">
+						<td></td>
+						<td>Total</td>
+						<td></td>
+						<td class="col_count">{{ qtable.total }}</td>
+					</tr>
+					<tr v-for="row in qtable.data" class="data_row">
+						<td class="col_code">{{ row.code }}</td>
+						<td>{{ row.label }}</td>
+						<td class="col_percent">{{ row.percent }}</td>
+						<td class="col_count">{{ row.count }}</td>
+					</tr>
+				</table>
+				<table v-if="qtable.table_type == 'mean'">
+					<tr class="underline_row">
+						<td class="al_right">total</td>
+						<td class="al_right">mean</td>
+					</tr>
+					<tr>
+						<td class="al_right">{{ qtable.total }}</td>
+						<td class="al_right">{{ qtable.mean }}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</grid-rows>
+</template>
+
+<template id="generic-selector-template">
+	<div :class="comp_class">
+		<h3>{{ title }}</h3>
+		<div class="add">
+			<slot></slot>
+		</div>
+		<select multiple v-model="selected" @keydown.delete="remove_selected_items">
+			<option v-for="item in items" :key="item" @dblclick="remove_item(item)">{{ item }}</option>
+		</select>
+		<flex-col class="arrows">
+			<button @click="moveUp">△</button>
+			<button @click="moveDown">▽</button>
+		</flex-col>
+		<div class="reset">
+			<button @click="reset">Reset</button>
+		</div>
+	</div>
+</template>
