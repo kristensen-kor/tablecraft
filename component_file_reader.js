@@ -1,39 +1,68 @@
 export const component_file_reader = {
 	template: `
-		<div><textarea id="paste_area" :placeholder="placeholder" @paste="handle_paste" v-model="input" rows="10" cols="50" :class="{ red_error: is_error }"></textarea></div>
+		<div>
+			<textarea id="paste_area" :placeholder="placeholder" @paste="handle_paste" v-model="input" rows="10" cols="50" :class="{ red_error: is_error }"></textarea>
+			<br>
+			<input type="file" @change="handle_file_input" accept=".tds">
+			<br>
+			<button @click="handle_load_example('./Titanic dataset.tds')">Load Example Titanic Dataset</button>
+		</div>
 	`,
 	data() {
 		return {
 			input: null,
-			placeholder: "Focus here and paste a .tds file from clipboard",
+			placeholder: "Focus here and paste a .tds file from clipboard or click 'Choose File' to select one",
 			is_error: false
 		};
 	},
 	methods: {
+		display_error(text) {
+			this.placeholder = text;
+			this.is_error = true;
+		},
 		handle_paste(event) {
 			const items = Array.from(event.clipboardData.items);
+			const files = items.filter(item => item.kind === "file").map(item => item.getAsFile());
 
-			const fileItems = items.filter(item => item.kind === "file").map(item => item.getAsFile());
-
-			if (fileItems.length == 0) {
-				this.placeholder = "No file detected. Please paste a .tds file.";
-				this.is_error = true;
+			if (files.length == 0) {
+				this.display_error("No file detected. Please paste a .tds file.");
 				return;
-			} else if (fileItems.length > 1) {
-				this.placeholder = "Please paste only one file.";
-				this.is_error = true;
+			} else if (files.length > 1) {
+				this.display_error("Please paste only one file.");
 				return;
 			}
 
-			this.read_and_parse_file(fileItems[0]);
+			this.read_and_parse_file(files[0]);
 		},
-		async read_and_parse_file(file) {
+		handle_file_input(event) {
+			const files = event.target.files;
+
+			if (!files || files.length == 0) {
+				this.display_error("No file selected. Please choose a .tds file.");
+				return;
+			} else if (files.length > 1) {
+				this.display_error("Please choose only one file.");
+				return;
+			}
+
+			this.read_and_parse_file(files[0]);
+		},
+		async handle_load_example(file_name) {
+			try {
+				const response = await fetch(file_name);
+				if (!response.ok) throw new Error("File not found");
+
+				const blob = await response.blob();
+				this.read_and_parse_file(blob, file_name);
+			} catch (error) {
+				this.display_error(`Error loading the .tds file: ${error.message}`);
+			}
+		},
+		async read_and_parse_file(file, file_name) {
 			try {
 				const decompressedText = await this.decompress_gzip(file);
-
-				const dataset = JSON.parse(decompressedText);
-				dataset.name = file.name?.replace(/\.[^/.]+$/, "") ?? "test file";
-
+				const dataset = JSON.parse(decompressedText);;
+				dataset.name = (file_name !== undefined ? file_name.substr(2) : file.name).replace(/\.[^/.]+$/, "");
 				dataset.var_full_label = {};
 
 				for (const var_name of dataset.var_list) {
@@ -41,11 +70,9 @@ export const component_file_reader = {
 				}
 
 				dataset.weight = dataset.data[dataset.weight];
-
 				this.$emit("file-read", dataset);
 			} catch (error) {
-				this.is_error = true;
-				this.placeholder = `Error processing the file: ${error.message}`;
+				this.display_error(`Error processing the file: ${error.message}`);
 			}
 		},
 		async decompress_gzip(file) {
@@ -57,23 +84,11 @@ export const component_file_reader = {
 			} catch (error) {
 				throw new Error("Decompression failed. The file may not be a valid gzip-compressed file.");
 			}
-		},
-		async load_temp_tds_file(file_name) {
-			try {
-				const response = await fetch(file_name);
-				if (!response.ok) throw new Error("File not found");
-
-				const blob = await response.blob();
-				this.read_and_parse_file(blob);
-			} catch (error) {
-				this.is_error = true;
-				this.placeholder = `Error loading the .tds file: ${error.message}`;
-			}
 		}
 	},
 	mounted() {
 		// debug
-		// this.load_temp_tds_file("./10540-9.tds");
+		// this.handle_load_example("./10540-9.tds");
 	},
 	watch: {
 		input: function() {
