@@ -1,6 +1,6 @@
 // worker.js
 
-import { sum, round, calc_weighted_mean, calc_weighted_percentages, sign_pct_vec, sign_mean } from "./utils.js";
+import { round, calc_weighted_mean, calc_weighted_nominal, sign_pct_vec, sign_mean } from "./utils.js";
 
 self.addEventListener("message", function(e) {
 	const { row_vars, col_vars, dataset } = e.data;
@@ -54,7 +54,7 @@ function calc_table(row_vars, col_vars, dataset) {
 				all_results[row_var][col_var][col_value] = calc_weighted_mean(data);
 			} else {
 				const row_values = Object.keys(dataset.val_labels[row_var]).map(Number);
-				all_results[row_var][col_var][col_value] = calc_weighted_percentages(data, row_values);
+				all_results[row_var][col_var][col_value] = calc_weighted_nominal(data, row_values);
 			}
 
 			self.postMessage({ type: "tick" });

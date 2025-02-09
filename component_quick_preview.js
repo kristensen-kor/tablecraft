@@ -1,30 +1,5 @@
 // Import utils
-import { sum, round } from "./utils.js";
-
-function calc_weighted_counts(data, row_values) {
-	data = data.filter(a => a.value.length > 0);
-	const total_sum = sum(data.map(a => a.weight));
-
-	if (total_sum == 0) {
-		return { total: 0, counts: row_values.map(() => NaN) };
-	} else {
-		const counts = row_values.map(x => sum(data.filter(a => a.value.includes(x)).map(a => a.weight)));
-
-		return { total: total_sum, counts: counts };
-	}
-}
-
-function calc_weighted_mean(data) {
-	data = data.filter(a => a.value !== null);
-	const total_sum = sum(data.map(a => a.weight));
-
-	if (total_sum == 0) {
-		return { total: 0, mean: NaN };
-	} else {
-		const mean = sum(data.map(a => a.value * a.weight)) / total_sum;
-		return { total: total_sum, mean: mean };
-	}
-}
+import { round, calc_weighted_nominal, calc_weighted_mean } from "./utils.js";
 
 export const component_quick_preview = {
 	template: "#qtable-template",
@@ -52,13 +27,13 @@ export const component_quick_preview = {
 			if (type == "single" || type == "multiple") {
 				const row_values = Object.keys(this.dataset.val_labels[var_name]).map(Number);
 
-				const result = calc_weighted_counts(data, row_values, type);
+				const result = calc_weighted_nominal(data, row_values);
 
-				const rows = row_values.map((code, index) => ({
+				const rows = row_values.map((code, i) => ({
 					code: code,
 					label: this.dataset.val_labels[var_name][code],
-					percent: round(result.counts[index] / result.total * 100, 1),
-					count: round(result.counts[index])
+					percent: round(result.percentages[i] * 100, 1),
+					count: round(result.counts[i])
 				}));
 
 				qtable.total = round(result.total);

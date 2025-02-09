@@ -55,7 +55,7 @@ export const sign_pct_vec = (n1, p1_array, n2, p2_array, sig = 0.05, min_base = 
 		if (n1 <= min_base || n2 <= min_base || p1 == p2) return "";
 		const p = (p1 * n1 + p2 * n2) / (n1 + n2);
 		const x = Math.abs(p1 - p2) / Math.sqrt(p * (1 - p) * (1 / n1 + 1 / n2));
-		if (x < 1.96) return "";
+		if (x < 1.96) return ""; // only sig = 0.05 supported for now
 		return (p2 > p1) ? "p" : "n";
 	});
 };
@@ -71,6 +71,21 @@ export const sign_mean = (n1, p1, sd1, n2, p2, sd2, sig = 0.05, minBase = 10) =>
 	return p2 > p1 ? "p" : "n";
 };
 
+export const calc_weighted_nominal = (data, row_values) => {
+	data = data.filter(a => a.value.length > 0);
+	const total = sum(data.map(a => a.weight));
+
+	if (total == 0) {
+		const nan_vec = row_values.map(() => NaN);
+		return { total: 0, counts: nan_vec, percentages: nan_vec };
+	} else {
+		const counts = row_values.map(x => sum(data.filter(a => a.value.includes(x)).map(a => a.weight)));
+		const percentages = counts.map(x => x / total);
+
+		return { total, counts, percentages };
+	}
+};
+
 export const calc_weighted_mean = (data) => {
 	data = data.filter(a => a.value !== null);
 	const total = sum(data.map(a => a.weight));
@@ -81,18 +96,5 @@ export const calc_weighted_mean = (data) => {
 		const mean = sum(data.map(a => a.value * a.weight)) / total;
 		const sd = Math.sqrt(sum(data.map(a => a.weight * Math.pow(a.value - mean, 2))) / (total - 1));
 		return { total, mean, sd };
-	}
-};
-
-export const calc_weighted_percentages = (data, row_values) => {
-	data = data.filter(a => a.value.length > 0);
-	const total = sum(data.map(a => a.weight));
-
-	if (total == 0) {
-		return { total: 0, percentages: row_values.map(() => NaN) };
-	} else {
-		const percentages = row_values.map(x => sum(data.filter(a => a.value.includes(x)).map(a => a.weight)) / total);
-
-		return { total, percentages };
 	}
 };
