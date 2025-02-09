@@ -62,19 +62,19 @@ function pt(t, df) {
 		return Math.log(2.5066282746310005 * ser / x) - tmp;
 	}
 
-	function ibeta(x, a, b) {
-		if (x < 0 || x > 1) return false;
-		let bt = (x === 0 || x === 1) ? 0 : Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+	function incomplete_beta(x, a, b) {
+		let beta = Math.exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * Math.log(x) + b * Math.log(1 - x));
+
 		if (x < (a + 1) / (a + b + 2)) {
-			return bt * betacf(x, a, b) / a;
+			return beta * betacf(x, a, b) / a;
 		} else {
-			return 1 - bt * betacf(1 - x, b, a) / b;
+			return 1 - beta * betacf(1 - x, b, a) / b;
 		}
 	}
 
 	const df2 = df / 2;
 	const sqrt_term = Math.sqrt(t * t + df);
-	return ibeta((t + sqrt_term) / (2 * sqrt_term), df2, df2);
+	return incomplete_beta((t + sqrt_term) / (2 * sqrt_term), df2, df2);
 }
 
 function sign_mean(n1, p1, sd1, n2, p2, sd2, sig = 0.05, minBase = 10) {
