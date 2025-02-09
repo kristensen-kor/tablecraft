@@ -144,5 +144,3 @@ self.addEventListener("message", function(e) {
 
 	self.postMessage({ type: "result", result: { col_header: table_col_header, table } });
 });
-
-// 149

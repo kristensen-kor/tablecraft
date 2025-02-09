@@ -30,14 +30,9 @@
 						<button @click="download" :disabled="calculating_table || table_data == null">Download</button>
 						<button @click="reset_table" :disabled="table_data == null">Clear table</button>
 					</flex-row>
-					<!-- <flex-row gap="0.5rem" justify="space-between" align="center"> -->
 					<flex-row v-if="calculating_table" gap="0.5rem" justify="space-between" align="center">
-					<!-- <grid-cols template="1fr auto"> -->
-					<!-- <grid-cols v-if="calculating_table" template="1fr auto"> -->
 						<progress :value="progress" :max="100" style="flex: 1;"></progress>
-						<!-- <progress value="75" :max="100" style="flex: 1;"></progress> -->
 						<span>{{ progress }}%</span>
-					<!-- </grid-cols> -->
 					</flex-row>
 				</flex-col>
 				<div class="main-output" gap="1rem">
