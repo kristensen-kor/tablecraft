@@ -16,7 +16,6 @@ import { component_file_reader } from "./component_file_reader.js";
 import { component_controls } from "./component_controls.js";
 
 
-
 const app_config = {
 	data() {
 		return {

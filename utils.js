@@ -72,29 +72,45 @@ export const sign_mean = (n1, p1, sd1, n2, p2, sd2, sig = 0.05, minBase = 10) =>
 };
 
 export const calc_weighted_nominal = (data, row_values) => {
-	data = data.filter(a => a.value.length > 0);
-	const total = sum(data.map(a => a.weight));
+	let total = 0;
+	let counts_map = Object.fromEntries(row_values.map(row_value => [row_value, 0]));
+
+	for (const item of data) {
+		if (item.value.length == 0) continue;
+		total += item.weight;
+
+		for (const v of item.value) {
+			counts_map[v] += item.weight;
+		}
+	}
 
 	if (total == 0) {
 		const nan_vec = row_values.map(() => NaN);
 		return { total: 0, counts: nan_vec, percentages: nan_vec };
 	} else {
-		const counts = row_values.map(x => sum(data.filter(a => a.value.includes(x)).map(a => a.weight)));
+		const counts = row_values.map(x => counts_map[x]);
 		const percentages = counts.map(x => x / total);
-
 		return { total, counts, percentages };
 	}
 };
 
 export const calc_weighted_mean = (data) => {
-	data = data.filter(a => a.value !== null);
-	const total = sum(data.map(a => a.weight));
+	let total = 0;
+	let sum_wx = 0;
+	let sum_wx2 = 0;
+
+	for (const item of data) {
+		if (item.value === null) continue;
+		total += item.weight;
+		sum_wx += item.value * item.weight;
+		sum_wx2 += item.value * item.value * item.weight;
+	}
 
 	if (total == 0) {
 		return { total: 0, mean: NaN, sd: NaN };
 	} else {
-		const mean = sum(data.map(a => a.value * a.weight)) / total;
-		const sd = Math.sqrt(sum(data.map(a => a.weight * Math.pow(a.value - mean, 2))) / (total - 1));
+		const mean = sum_wx / total;
+		const sd = Math.sqrt((sum_wx2 - total * mean * mean) / (total - 1));
 		return { total, mean, sd };
 	}
 };

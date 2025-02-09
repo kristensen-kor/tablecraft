@@ -2,22 +2,21 @@
 
 import { round, calc_weighted_mean, calc_weighted_nominal, sign_pct_vec, sign_mean } from "./utils.js";
 
+function prepare_col_vars_values(col_vars, val_labels) {
+	let res = [];
+	col_vars.forEach(col_var => {
+		Object.keys(val_labels[col_var]).map(Number).forEach(col_value => {
+			res.push({col_var, col_value})
+		});
+	});
+	return res;
+}
+
 self.addEventListener("message", function(e) {
 	const { row_vars, col_vars, dataset } = e.data;
 
-	let total_ticks = 0;
-	row_vars.forEach(row_var => {
-		col_vars.forEach(col_var => {
-			total_ticks += Object.keys(dataset.val_labels[col_var]).length;
-		});
-	});
-	self.postMessage({ type: "start", total_ticks: total_ticks });
+	console.time("Total Execution Time");
 
-	const result = calc_table(row_vars, col_vars, dataset);
-	self.postMessage({ type: "result", result });
-});
-
-function calc_table(row_vars, col_vars, dataset) {
 	let all_results = {};
 	row_vars.forEach(row_var => {
 		all_results[row_var] = {};
@@ -26,58 +25,53 @@ function calc_table(row_vars, col_vars, dataset) {
 		});
 	});
 
-	let col_vars_values = [];
-	col_vars.forEach(col_var => {
-		Object.keys(dataset.val_labels[col_var]).map(Number).forEach(col_value => {
-			col_vars_values.push({col_var, col_value})
+	let col_vars_values = prepare_col_vars_values(col_vars, dataset.val_labels);
+
+	let total_ticks = row_vars.length * col_vars_values.length;
+	self.postMessage({ type: "start", total_ticks });
+
+	// precompute indices for each col_var and each col_value.
+	let col_indices = Object.fromEntries(col_vars.map(col_var => [col_var, {}]));
+	col_vars_values.forEach(({ col_var, col_value }) => {
+		col_indices[col_var][col_value] = [];
+
+		dataset.data[col_var].forEach((val, i) => {
+			if (val.includes(col_value)) col_indices[col_var][col_value].push(i);
 		});
 	});
 
+	// precompute row_values.
+	const precomputed_row_values = Object.fromEntries(row_vars.filter(row_var => dataset.var_type[row_var] != "numeric").map(row_var => [row_var, Object.keys(dataset.val_labels[row_var]).map(Number)]));
 
-	col_vars_values.forEach(cv => {
-		const { col_var, col_value } = cv;
-		const col_vec = dataset.data[col_var];
+	col_vars_values.forEach(({ col_var, col_value }) => {
+		const indices = col_indices[col_var][col_value];
 
 		row_vars.forEach(row_var => {
 			const row_vec = dataset.data[row_var];
 			const row_type = dataset.var_type[row_var];
 
-			let data = dataset.weight.map((_, i) => ({
+			let data = indices.map(i => ({
 				value: row_vec[i],
-				col_filter: col_vec[i],
 				weight: dataset.weight[i]
 			}));
-
-			data = data.filter(a => a.col_filter.includes(col_value));
 
 			if (row_type == "numeric") {
 				all_results[row_var][col_var][col_value] = calc_weighted_mean(data);
 			} else {
-				const row_values = Object.keys(dataset.val_labels[row_var]).map(Number);
-				all_results[row_var][col_var][col_value] = calc_weighted_nominal(data, row_values);
+				all_results[row_var][col_var][col_value] = calc_weighted_nominal(data, precomputed_row_values[row_var]);
 			}
 
 			self.postMessage({ type: "tick" });
 		});
 	});
 
+	// remove empty columns
+	col_vars_values = col_vars_values.filter(({ col_var, col_value }) => row_vars.some(row_var => all_results[row_var][col_var][col_value].total > 0));
 
-	col_vars_values = col_vars_values.filter(cv => {
-		const { col_var, col_value } = cv;
-		const all_zero = row_vars.every(row_var => all_results[row_var][col_var][col_value].total == 0);
-		if (all_zero) {
-			row_vars.forEach(row_var => {
-				delete all_results[row_var][col_var][col_value];
-			});
-		}
-		return !all_zero;
-	});
-
-
-	col_vars_values.forEach((cv, i) => {
+	// significance
+	col_vars_values.forEach(({ col_var, col_value }, i) => {
 		if (i == 0) return;
 
-		const { col_var, col_value } = cv;
 		row_vars.forEach(row_var => {
 			const x1 = all_results[row_var][col_vars_values[0].col_var][col_vars_values[0].col_value];
 			const x2 = all_results[row_var][col_var][col_value];
@@ -87,7 +81,6 @@ function calc_table(row_vars, col_vars, dataset) {
 			} else {
 				all_results[row_var][col_var][col_value].sig = sign_mean(x1.total, x1.mean, x1.sd, x2.total, x2.mean, x2.sd);
 			}
-
 		});
 	});
 
@@ -96,8 +89,7 @@ function calc_table(row_vars, col_vars, dataset) {
 	let globalHeader2 = ["", "", "", ""];
 	let globalHeader3 = ["", "", "", ""];
 
-	col_vars_values.forEach(cv => {
-		const { col_var, col_value } = cv;
+	col_vars_values.forEach(({ col_var, col_value }) => {
 		globalHeader1.push(col_var);
 		globalHeader2.push(dataset.var_labels[col_var] ?? col_var);
 		globalHeader3.push(dataset.val_labels[col_var][col_value]);
@@ -112,32 +104,29 @@ function calc_table(row_vars, col_vars, dataset) {
 		}
 	}
 
-
 	let table = [];
 
 	row_vars.forEach(row_var => {
-		const row_type = dataset.var_type[row_var];
-
 		let sectionHeader = [row_var, "", dataset.var_labels[row_var] ?? row_var, "total"].map(x => ({ value: x, style: "header" }));
-		col_vars_values.forEach(cv => {
-			const res = all_results[row_var][cv.col_var][cv.col_value];
+		col_vars_values.forEach(({ col_var, col_value }) => {
+			const res = all_results[row_var][col_var][col_value];
 			const total = res.total;
 			sectionHeader.push({ value: round(total), style: total <= 10 ? ["header", "bleak"] : "header" });
 		});
 		table.push(sectionHeader);
 
-		if (row_type == "numeric") {
+		if (dataset.var_type[row_var] == "numeric") {
 			let row = ["", "", "", "mean"].map(x => ({ value: x }));
-			col_vars_values.forEach(cv => {
-				const res = all_results[row_var][cv.col_var][cv.col_value];
+			col_vars_values.forEach(({ col_var, col_value }) => {
+				const res = all_results[row_var][col_var][col_value];
 				row.push({ value: res.total == 0 ? "" : round(res.mean, 1).toFixed(1), style: res.total <= 10 ? "bleak" : res.sig ?? "" });
 			});
 			table.push(row);
 		} else {
 			Object.keys(dataset.val_labels[row_var]).forEach((code, idx) => {
 				let row = ["", code, dataset.val_labels[row_var][code], dataset.var_type[row_var]].map(x => ({ value: x }));
-				col_vars_values.forEach(cv => {
-					const res = all_results[row_var][cv.col_var][cv.col_value];
+				col_vars_values.forEach(({ col_var, col_value }) => {
+					const res = all_results[row_var][col_var][col_value];
 					if (res.total == 0) {
 						row.push({ value: "" });
 					} else {
@@ -149,6 +138,9 @@ function calc_table(row_vars, col_vars, dataset) {
 		}
 	});
 
-	return { col_header: table_col_header, table };
-}
+	self.postMessage({ type: "result", result: { col_header: table_col_header, table } });
 
+	console.timeEnd("Total Execution Time");
+});
+
+// 149
