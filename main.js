@@ -22,10 +22,7 @@ const app_config = {
 			dataset: null,
 			calculating_table: false,
 			table_data: null,
-			progress: {
-				current: 0,
-				total: 0
-			}
+			progress: 0
 		};
 	},
 	provide() {
@@ -41,9 +38,8 @@ const app_config = {
 			this.dataset = null;
 		},
 		calc_table(row_vars, col_vars) {
+			this.progress = 0;
 			this.calculating_table = true;
-			this.progress.current = 0;
-			this.progress.total = 0;
 			worker.postMessage({ row_vars: toRaw(row_vars), col_vars: toRaw(col_vars), dataset: toRaw(this.dataset) });
 		},
 		reset_table() {
@@ -116,10 +112,8 @@ const app_config = {
 	mounted() {
 		worker.addEventListener("message", (e) => {
 			const data = e.data;
-			if (data.type == "start") {
-				this.progress.total = data.total_ticks;
-			} else if (data.type == "tick") {
-				this.progress.current++;
+			if (data.type == "tick") {
+				this.progress = data.progress;
 			} else if (data.type == "result") {
 				this.table_data = data.result;
 				this.calculating_table = false;

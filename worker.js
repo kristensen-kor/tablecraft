@@ -15,8 +15,6 @@ function prepare_col_vars_values(col_vars, val_labels) {
 self.addEventListener("message", function(e) {
 	const { row_vars, col_vars, dataset } = e.data;
 
-	console.time("Total Execution Time");
-
 	let all_results = {};
 	row_vars.forEach(row_var => {
 		all_results[row_var] = {};
@@ -26,9 +24,6 @@ self.addEventListener("message", function(e) {
 	});
 
 	let col_vars_values = prepare_col_vars_values(col_vars, dataset.val_labels);
-
-	let total_ticks = row_vars.length * col_vars_values.length;
-	self.postMessage({ type: "start", total_ticks });
 
 	// precompute indices for each col_var and each col_value.
 	let col_indices = Object.fromEntries(col_vars.map(col_var => [col_var, {}]));
@@ -42,6 +37,10 @@ self.addEventListener("message", function(e) {
 
 	// precompute row_values.
 	const precomputed_row_values = Object.fromEntries(row_vars.filter(row_var => dataset.var_type[row_var] != "numeric").map(row_var => [row_var, Object.keys(dataset.val_labels[row_var]).map(Number)]));
+
+	const total_iterations = row_vars.length * col_vars_values.length;
+	let current_iteration = 0;
+	let last_progress = 0;
 
 	col_vars_values.forEach(({ col_var, col_value }) => {
 		const indices = col_indices[col_var][col_value];
@@ -61,7 +60,12 @@ self.addEventListener("message", function(e) {
 				all_results[row_var][col_var][col_value] = calc_weighted_nominal(data, precomputed_row_values[row_var]);
 			}
 
-			self.postMessage({ type: "tick" });
+			current_iteration++;
+			const progress = Math.floor((current_iteration / total_iterations) * 100);
+			if (progress > last_progress) {
+				self.postMessage({ type: "tick", progress });
+				last_progress = progress;
+			}
 		});
 	});
 
@@ -139,8 +143,6 @@ self.addEventListener("message", function(e) {
 	});
 
 	self.postMessage({ type: "result", result: { col_header: table_col_header, table } });
-
-	console.timeEnd("Total Execution Time");
 });
 
 // 149
