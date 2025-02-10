@@ -5,7 +5,7 @@ export const component_file_reader = {
 			<br>
 			<input type="file" @change="handle_file_input" accept=".tds">
 			<br>
-			<button @click="handle_load_example('./Titanic dataset.tds')">Load Example Titanic Dataset</button>
+			<button @click="handle_load_example('./General Social Survey 2000.tds')">Load Example 'General Social Survey 2000' Dataset</button>
 		</div>
 	`,
 	data() {
@@ -60,7 +60,9 @@ export const component_file_reader = {
 		},
 		async read_and_parse_file(file, file_name) {
 			try {
-				const decompressedText = await this.decompress_gzip(file);
+				const stream = file.stream().pipeThrough(new DecompressionStream('gzip'));
+				const decompressedResponse = new Response(stream);
+				const decompressedText = await decompressedResponse.text();
 				const dataset = JSON.parse(decompressedText);;
 				dataset.name = (file_name !== undefined ? file_name.substr(2) : file.name).replace(/\.[^/.]+$/, "");
 				dataset.var_full_label = {};
@@ -73,16 +75,6 @@ export const component_file_reader = {
 				this.$emit("file-read", dataset);
 			} catch (error) {
 				this.display_error(`Error processing the file: ${error.message}`);
-			}
-		},
-		async decompress_gzip(file) {
-			try {
-				const stream = file.stream().pipeThrough(new DecompressionStream('gzip'));
-				const decompressedResponse = new Response(stream);
-				const decompressedText = await decompressedResponse.text();
-				return decompressedText;
-			} catch (error) {
-				throw new Error("Decompression failed. The file may not be a valid gzip-compressed file.");
 			}
 		}
 	},

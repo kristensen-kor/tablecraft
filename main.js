@@ -5,7 +5,7 @@ import "./custom_elements.js";
 const worker = new Worker("worker.js", { type: "module" });
 
 // Import vue.js and exceljs
-import { createApp, toRaw } from "https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.esm-browser.js";
+import { createApp, toRaw } from "./vue.esm-browser.js";
 
 // Import utils
 import { sum, round } from "./utils.js";
