@@ -51,9 +51,9 @@ const app_config = {
 				this.calculating_table = false;
 			}
 		});
-	}
+	},
 	// debug
-	// , watch: {
+	// watch: {
 	// 	dataset(x) {
 	// 		if (x !== null) this.calc_table(["REGION", "TYPE", "S4", "S4_1"], ["total", "REGION", "S8", "S4_1"]);
 	// 	}
