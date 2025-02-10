@@ -1,16 +1,9 @@
-// Import custom elements
 import "./custom_elements.js";
 
-// Load worker
 const worker = new Worker("worker.js", { type: "module" });
 
-// Import vue.js and exceljs
 import { createApp, toRaw } from "./vue.esm-browser.js";
 
-// Import utils
-import { sum, round } from "./utils.js";
-
-// Import the components
 import { component_file_reader } from "./component_file_reader.js";
 import { component_controls } from "./component_controls.js";
 import { export_table } from "./export_table.js";
@@ -58,13 +51,13 @@ const app_config = {
 				this.calculating_table = false;
 			}
 		});
-	},
+	}
 	// debug
-	// watch: {
+	// , watch: {
 	// 	dataset(x) {
 	// 		if (x !== null) this.calc_table(["REGION", "TYPE", "S4", "S4_1"], ["total", "REGION", "S8", "S4_1"]);
 	// 	}
-	// },
+	// }
 	components: {
 		"file-reader": component_file_reader,
 		"controls": component_controls
