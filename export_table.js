@@ -55,7 +55,9 @@ export async function export_table(table_data, name) {
 	const blob = await workbook.xlsx.writeBuffer();
 	let link = document.createElement("a");
 	link.href = URL.createObjectURL(new Blob([blob], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
-	const formattedDate = new Date().toISOString().slice(0, 16).replace("T", " ").replace(":", "");
-	link.download = `${name} table ${formattedDate}.xlsx`;
+	const now = new Date();
+	const local_time = new Date(now.getTime() - now.getTimezoneOffset() * 60 * 1000);
+	const formatted_date = local_time.toISOString().slice(0, 16).replace("T", " ").replace(":", "");
+	link.download = `${name} table ${formatted_date}.xlsx`;
 	link.click();
 }

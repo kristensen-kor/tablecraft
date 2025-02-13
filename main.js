@@ -27,6 +27,7 @@ const app_config = {
 			this.dataset = dataset;
 		},
 		read_new_dataset() {
+			this.table_data = null;
 			this.dataset = null;
 		},
 		calc_table(row_vars, col_vars) {
