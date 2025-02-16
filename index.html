@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Tablecraft</title>
+	<link rel="stylesheet" href="style_template.css">
 	<link rel="stylesheet" href="style.css">
 	<script type="module" src="main.js"></script>
 </head>
@@ -64,10 +65,10 @@
 				<!-- <flex-col class="variables-selector" gap="0.5rem"> -->
 					<flex-row justify="space-between" align="center">
 						<h3>Variables</h3>
-						<div class="search-input-wrapper">
+						<flex-row class="search-input-wrapper" gap="2px">
 							<input type="text" v-model="search_term" placeholder="🔎"></input>
-							<button :class="{ visibility_hidden: !search_term }" @click="clear_search">X</button>
-						</div>
+							<button :class="{ visibility_hidden: !search_term }" @click="clear_search">⨉</button>
+						</flex-row>
 					</flex-row>
 					<select multiple v-model="selectedVariables" @keydown.enter="addToRows" @keydown.right.prevent="addToColumns">
 						<option v-for="(variable, index) in filtered_var_list" :key="variable" :value="variable" @dblclick="add_row(variable)">

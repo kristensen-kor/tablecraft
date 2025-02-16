@@ -1,0 +1,116 @@
+:root {
+/*	charcoal*/
+	--primary_50: #f4f5f6;
+	--primary_100: #ced2d4;
+	--primary_200: #a8afb3;
+	--primary_300: #828b91;
+	--primary_400: #5c6870;
+	--primary_500: #36454f;
+	--primary_600: #2b373f;
+	--primary_700: #20292f;
+	--primary_800: #151b1f;
+	--primary_900: #0a0d0f;
+
+/*	soft white*/
+	--bg_50: #fefefe;
+	--bg_100: #fbfbfa;
+	--bg_200: #f9f8f7;
+	--bg_300: #f6f5f4;
+	--bg_400: #f4f2f1;
+	--bg_500: #f2f0ee;
+	--bg_600: #c1c0be;
+	--bg_700: #91908e;
+	--bg_800: #60605f;
+	--bg_900: #302f2f;
+
+/*	indigo dye*/
+	--secondary_50: #f2f6f8;
+	--secondary_100: #c4d4de;
+	--secondary_200: #96b2c4;
+	--secondary_300: #6890ab;
+	--secondary_400: #3a6e91;
+	--secondary_500: #0d4d78;
+	--secondary_600: #0a3d60;
+	--secondary_700: #072e48;
+	--secondary_800: #051e30;
+	--secondary_900: #020f17;
+}
+
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	font-family: sans-serif;
+	background-color: var(--bg_400);
+	color: var(--primary_500);
+}
+
+::selection {
+	background-color: var(--primary_400);
+	color: var(--primary_50);
+}
+
+::placeholder {
+	font-family: monospace;
+	color: var(--primary_300);
+}
+
+h1, h2, h3 {
+	margin: 0;
+	color: var(--primary_400);
+}
+
+input[type="number"],
+input[type="text"],
+textarea {
+	font-family: monospace;
+	background-color: var(--bg_100);
+	color: var(--primary_700);
+	border: 1px solid var(--bg_700);
+	padding: 2px 3px 3px 4px;
+	border-radius: 3px;
+	font-size: 1rem;
+	transition: border 0.3s ease;
+
+	&:hover {
+		border: 1px solid var(--primary_500);
+	}
+
+	&:focus {
+		border: 1px solid var(--primary_500);
+		outline: 1px solid var(--primary_500);
+	}
+}
+
+textarea {
+	resize: none;
+	padding: 0.5rem;
+	border-radius: 4px;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
+	text-shadow: 0 0 0.66px currentcolor;
+}
+
+input[type="number"]::placeholder,
+input[type="text"]::placeholder {
+	font-weight: 400;
+}
+
+label {
+	color: var(--primary_700);
+	cursor: pointer;
+	transition: 0.3s ease;
+
+	&:hover {
+		text-shadow: 0 0 1px var(--bg_700);
+	}
+}
