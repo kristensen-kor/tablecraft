@@ -82,7 +82,7 @@ body {
 
 					& .variables-selector {
 						min-height: 0;
-/*						flex: 2;*/
+						flex: 2;
 
 						& .search-input-wrapper input {
 							&::placeholder {
@@ -101,7 +101,7 @@ body {
 
 					& .quick-preview {
 						min-height: 0;
-/*						flex: 1;*/
+						flex: 1;
 
 						& .preview-table-container {
 							padding-left: 1ch;

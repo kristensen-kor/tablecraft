@@ -58,8 +58,8 @@
 	<flex-col class="controls-grid" gap="1rem" justify="space-between">
 		<grid-cols class="variables-block" gap="0.5rem" template="3fr 2fr">
 
-			<!-- <flex-col class="variables-left" gap="1rem"> -->
-			<grid-rows class="variables-left" gap="1rem" template="2fr 1fr">
+			<flex-col class="variables-left" gap="1rem">
+			<!-- <grid-rows class="variables-left" gap="1rem" template="2fr 1fr"> -->
 
 				<grid-rows class="variables-selector" gap="0.5rem" template="auto 1fr auto">
 				<!-- <flex-col class="variables-selector" gap="0.5rem"> -->
@@ -84,8 +84,8 @@
 
 				<quick_preview v-if="quick_preview_visible" :variables="selectedVariables"></quick_preview>
 
-			<!-- </flex-col> -->
-			</grid-rows>
+			</flex-col>
+			<!-- </grid-rows> -->
 
 
 			<grid-rows class="variables-right" gap="1rem" template="1fr 3fr">
