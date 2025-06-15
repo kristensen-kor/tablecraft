@@ -2,79 +2,62 @@
 
 export default {
 	template: "#generic-selector-template",
-	props: ["title", "ref_items", "def_item"],
+	props: ["title", "default_item"],
 	data() {
 		return {
-			def_items: this.def_item ? [this.def_item] : [],
+			items: [],
 			selected: []
 		};
 	},
 	computed: {
-		items: {
-			get() {
-				return this.ref_items;
-			},
-			set(newItems) {
-				this.$emit("update:ref_items", newItems);
-			}
+		can_move_up() {
+			return this.selected.length != 0 && this.items[0] != this.selected[0];
+		},
+		can_move_down() {
+			return this.selected.length != 0 && this.items.at(-1) != this.selected.at(-1);
 		}
 	},
 	methods: {
 		reset() {
-			this.items = this.def_items;
+			this.items = this.default_item ? [this.default_item] : [];
+		},
+		add_items(new_items) {
+			this.items = [...new Set([...this.items, ...new_items])];
 		},
 		remove_item(item) {
 			const index = this.items.indexOf(item);
 			if (index !== -1) this.items.splice(index, 1);
-			if (this.items.length === 0) this.items = this.def_items;
+			if (this.items.length === 0) this.reset();
 		},
 		remove_selected_items() {
 			this.items = this.items.filter(col => !this.selected.includes(col));
-			if (this.items.length === 0) this.items = this.def_items;
+			if (this.items.length === 0) this.reset();
 		},
 		move_up() {
-			let arr = this.items;
-			let selectedSet = new Set(this.selected);
-			let i = 0;
-			while (i < arr.length) {
-				if (selectedSet.has(arr[i])) {
-					let start = i;
-					while (i < arr.length && selectedSet.has(arr[i])) {
-						i++;
-					}
-					let end = i - 1;
-					if (start > 0 && !selectedSet.has(arr[start - 1])) {
-						const temp = arr[start - 1];
-						arr.splice(start - 1, 1);
-						arr.splice(end, 0, temp);
-						i = start;
-					}
-				} else {
-					i++;
-				}
+			if (!this.can_move_up) return;
+			const selected_set = new Set(this.selected)
+			const indices = this.items.map((item, idx) => selected_set.has(item) ? idx : -1).filter(idx => idx !== -1)
+
+			for (const i of indices) {
+				if (!selected_set.has(this.items[i - 1])) [this.items[i - 1], this.items[i]] = [this.items[i], this.items[i - 1]]
 			}
 		},
 		move_down() {
-			let arr = this.items;
-			let selectedSet = new Set(this.selected);
-			let i = arr.length - 1;
-			while (i >= 0) {
-				if (selectedSet.has(arr[i])) {
-					let end = i;
-					while (i >= 0 && selectedSet.has(arr[i])) {
-						i--;
-					}
-					let start = i + 1;
-					if (end < arr.length - 1 && !selectedSet.has(arr[end + 1])) {
-						const temp = arr[end + 1];
-						arr.splice(end + 1, 1);
-						arr.splice(start, 0, temp);
-						i = start - 1;
-					}
-				} else {
-					i--;
-				}
+			if (!this.can_move_down) return;
+			const selected_set = new Set(this.selected)
+			const indices = this.items.map((item, idx) => selected_set.has(item) ? idx : -1).filter(idx => idx !== -1).reverse()
+
+			for (const i of indices) {
+				if (!selected_set.has(this.items[i + 1])) [this.items[i + 1], this.items[i]] = [this.items[i], this.items[i + 1]]
 			}
 		}
+	},
+	watch: {
+		items(value) {
+			this.$emit("update:items", value);
+		}
+	},
+	mounted() {
+		this.reset();
 	}
 };

@@ -1,4 +1,5 @@
-// Import the components
+// component_controls.js
+
 import { component_quick_preview } from "./component_quick_preview.js";
 import GenericSelector from "./components/GenericSelector.js";
 
@@ -12,7 +13,7 @@ export const component_controls = {
 	data() {
 		return {
 			quick_preview_visible: true,
-			selectedVariables: [],
+			selected_variables: [],
 			rows: [],
 			cols: ["total"],
 			search_term: "",
@@ -33,20 +34,19 @@ export const component_controls = {
 			this.quick_preview_visible = !this.quick_preview_visible;
 		},
 		clear_variables() {
-			this.selectedVariables = [];
+			this.selected_variables = [];
 		},
 		clear_search() {
 			this.search_term = "";
 		},
-		add_row (variable) {
-			this.rows = [...new Set([...this.rows, variable])];
+		add_row(variable) {
+			this.$refs.rows_selector.add_items([variable]);
 		},
-		addToRows() {
-			this.rows = [...new Set([...this.rows, ...this.selectedVariables])];
+		add_to_rows() {
+			this.$refs.rows_selector.add_items(this.selected_variables);
 		},
-		addToColumns() {
-			const vars_to_add = this.selectedVariables.filter(a => this.var_type[a] != "numeric");
-			this.cols = [...new Set([...this.cols, ...vars_to_add])];
+		add_to_columns() {
+			this.$refs.cols_selector.add_items(this.selected_variables.filter(a => this.var_type[a] != "numeric"));
 		},
 		calc_table() {
 			this.$emit("calc-table-event", this.rows, this.cols);

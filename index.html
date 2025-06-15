@@ -77,7 +77,7 @@
 							<button :class="{ visibility_hidden: !search_term }" @click="clear_search">⨉</button>
 						</flex-row>
 					</flex-row>
-					<select multiple v-model="selectedVariables" @keydown.enter="addToRows" @keydown.right.prevent="addToColumns">
+					<select multiple v-model="selected_variables" @keydown.enter="add_to_rows" @keydown.right.prevent="add_to_columns">
 						<option v-for="(variable, index) in filtered_var_list" :key="variable" :value="variable" @dblclick="add_row(variable)">
 							{{ var_full_label[variable] }}
 						</option>
@@ -89,7 +89,7 @@
 				<!-- </flex-col> -->
 				</grid-rows>
 
-				<quick_preview v-if="quick_preview_visible" :variables="selectedVariables"></quick_preview>
+				<quick_preview v-if="quick_preview_visible" :variables="selected_variables"></quick_preview>
 
 			</flex-col>
 			<!-- </grid-rows> -->
@@ -97,12 +97,12 @@
 
 			<grid-rows class="variables-right" gap="1rem" template="1fr 3fr">
 
-				<generic-selector title="Columns" class="cols-selector" def_item="total" v-model:ref_items="cols">
-					<button @click="addToColumns">></button>
+				<generic-selector ref="cols_selector" title="Columns" class="cols-selector" default_item="total" v-model:items="cols">
+					<button @click="add_to_columns">></button>
 				</generic-selector>
 
-				<generic-selector title="Rows" class="rows-selector" v-model:ref_items="rows">
-					<button @click="addToRows">></button>
+				<generic-selector ref="rows_selector" title="Rows" class="rows-selector" v-model:items="rows">
+					<button @click="add_to_rows">></button>
 				</generic-selector>
 
 			</grid-rows>
@@ -165,8 +165,8 @@
 			<option v-for="item in items" :key="item" @dblclick="remove_item(item)">{{ item }}</option>
 		</select>
 		<flex-col class="arrows">
-			<button @click="move_up">△</button>
-			<button @click="move_down">▽</button>
+			<button @click="move_up" :disabled="!can_move_up">△</button>
+			<button @click="move_down" :disabled="!can_move_down">▽</button>
 		</flex-col>
 		<div class="reset">
 			<button @click="reset">Reset</button>
