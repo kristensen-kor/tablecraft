@@ -5,6 +5,13 @@
 	<title>Tablecraft</title>
 	<link rel="stylesheet" href="style_template.css">
 	<link rel="stylesheet" href="style.css">
+	<script type="importmap">
+		{
+			"imports": {
+				"vue": "./vue.esm-browser.js"
+			}
+		}
+	</script>
 	<script type="module" src="main.js"></script>
 </head>
 <body>
@@ -16,7 +23,7 @@
 	</header>
 
 	<grid-rows id="app" gap="1rem" template="auto 1fr">
-		<file-reader v-if="dataset === null" @file-read="handleFileRead"></file-reader>
+		<file-reader v-if="dataset === null" v-model:dataset_value="dataset"></file-reader>
 		<flex-row v-if="dataset !== null" justify="space-between" align="center">
 			<h2>{{ dataset.name }}</h2>
 			<button @click="read_new_dataset">Open new dataset</button>
@@ -90,13 +97,13 @@
 
 			<grid-rows class="variables-right" gap="1rem" template="1fr 3fr">
 
-				<component_generic_selector title="Columns" comp_class="cols-selector" def_item="total" v-model:ref_items="cols">
+				<generic-selector title="Columns" class="cols-selector" def_item="total" v-model:ref_items="cols">
 					<button @click="addToColumns">></button>
-				</component_generic_selector>
+				</generic-selector>
 
-				<component_generic_selector title="Rows" comp_class="rows-selector" v-model:ref_items="rows">
+				<generic-selector title="Rows" class="rows-selector" v-model:ref_items="rows">
 					<button @click="addToRows">></button>
-				</component_generic_selector>
+				</generic-selector>
 
 			</grid-rows>
 
@@ -149,7 +156,7 @@
 </template>
 
 <template id="generic-selector-template">
-	<div :class="comp_class">
+	<div>
 		<h3>{{ title }}</h3>
 		<div class="add">
 			<slot></slot>
@@ -158,8 +165,8 @@
 			<option v-for="item in items" :key="item" @dblclick="remove_item(item)">{{ item }}</option>
 		</select>
 		<flex-col class="arrows">
-			<button @click="moveUp">△</button>
-			<button @click="moveDown">▽</button>
+			<button @click="move_up">△</button>
+			<button @click="move_down">▽</button>
 		</flex-col>
 		<div class="reset">
 			<button @click="reset">Reset</button>

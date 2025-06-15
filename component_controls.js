@@ -1,12 +1,12 @@
 // Import the components
 import { component_quick_preview } from "./component_quick_preview.js";
-import { component_generic_selector } from "./component_generic_selector.js";
+import GenericSelector from "./components/GenericSelector.js";
 
 export const component_controls = {
 	template: "#controls-template",
 	components: {
 		"quick_preview": component_quick_preview,
-		"component_generic_selector": component_generic_selector
+		GenericSelector
 	},
 	props: ["var_list", "var_full_label", "var_type"],
 	data() {

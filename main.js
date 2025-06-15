@@ -2,9 +2,9 @@ import "./custom_elements.js";
 
 const worker = new Worker("worker.js", { type: "module" });
 
-import { createApp, toRaw } from "./vue.esm-browser.js";
+import { createApp, toRaw } from "vue";
 
-import { component_file_reader } from "./component_file_reader.js";
+import FileReader from "./components/FileReader.js";
 import { component_controls } from "./component_controls.js";
 import { export_table } from "./export_table.js";
 
@@ -23,9 +23,6 @@ const app_config = {
 		};
 	},
 	methods: {
-		handleFileRead(dataset) {
-			this.dataset = dataset;
-		},
 		read_new_dataset() {
 			this.table_data = null;
 			this.dataset = null;
@@ -60,7 +57,7 @@ const app_config = {
 	// 	}
 	// }
 	components: {
-		"file-reader": component_file_reader,
+		FileReader,
 		"controls": component_controls
 	}
 };
