@@ -141,6 +141,14 @@ body {
 
 				& .variables-right {
 
+					& .cols-selector {
+						flex: 1;
+					}
+
+					& .rows-selector {
+						flex: 3;
+					}
+
 					& .cols-selector, .rows-selector {
 						display: grid;
 						grid-template-rows: auto 1fr auto;

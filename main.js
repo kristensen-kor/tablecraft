@@ -5,7 +5,7 @@ const worker = new Worker("worker.js", { type: "module" });
 import { createApp, toRaw } from "vue";
 
 import FileReader from "./components/FileReader.js";
-import { component_controls } from "./component_controls.js";
+import ControlsComponent from "./components/ControlsComponent.js";
 import { export_table } from "./export_table.js";
 
 const app_config = {
@@ -58,7 +58,7 @@ const app_config = {
 	// }
 	components: {
 		FileReader,
-		"controls": component_controls
+		ControlsComponent
 	}
 };
 
