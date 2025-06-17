@@ -1,4 +1,4 @@
-import "./exceljs.min.js";
+import "exceljs";
 
 export async function export_table(table_data, name) {
 	let workbook = new ExcelJS.Workbook();
