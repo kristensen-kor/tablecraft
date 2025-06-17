@@ -13,7 +13,7 @@ function prepare_col_vars_values(col_vars, val_labels) {
 }
 
 self.addEventListener("message", function(e) {
-	const { row_vars, col_vars, dataset } = e.data;
+	const { dataset, row_vars, col_vars, filter_mask } = e.data;
 
 	let all_results = {};
 	row_vars.forEach(row_var => {
@@ -31,7 +31,7 @@ self.addEventListener("message", function(e) {
 		col_indices[col_var][col_value] = [];
 
 		dataset.data[col_var].forEach((val, i) => {
-			if (val.includes(col_value)) col_indices[col_var][col_value].push(i);
+			if (filter_mask[i] && val.includes(col_value)) col_indices[col_var][col_value].push(i);
 		});
 	});
 

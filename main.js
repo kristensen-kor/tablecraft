@@ -27,20 +27,20 @@ const app_config = {
 			this.table_data = null;
 			this.dataset = null;
 		},
-		calc_table(row_vars, col_vars) {
+		calc_table(row_vars, col_vars, filter_mask) {
 			this.progress = 0;
 			this.calculating_table = true;
-			worker.postMessage({ row_vars: toRaw(row_vars), col_vars: toRaw(col_vars), dataset: toRaw(this.dataset) });
+			worker.postMessage({ dataset: toRaw(this.dataset), row_vars: toRaw(row_vars), col_vars: toRaw(col_vars), filter_mask: toRaw(filter_mask) });
 		},
 		reset_table() {
 			this.table_data = null;
 		},
-		async download() {
-			await export_table(this.table_data, this.dataset.name);
+		download() {
+			export_table(this.table_data, this.dataset.name);
 		}
 	},
 	mounted() {
-		worker.addEventListener("message", (e) => {
+		worker.addEventListener("message", e => {
 			const data = e.data;
 			if (data.type == "tick") {
 				this.progress = data.progress;

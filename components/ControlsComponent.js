@@ -2,12 +2,14 @@
 
 import { component_quick_preview } from "../component_quick_preview.js";
 import GenericSelector from "./GenericSelector.js";
+import FilterComponent from "./FilterComponent.js";
 
 export default {
 	template: "#controls-template",
 	components: {
 		"quick_preview": component_quick_preview,
-		GenericSelector
+		GenericSelector,
+		FilterComponent
 	},
 	props: ["var_list", "var_full_label", "var_type"],
 	data() {
@@ -16,6 +18,7 @@ export default {
 			selected_variables: [],
 			rows: [],
 			cols: [],
+			filter_mask: [],
 			search_term: "",
 			selectedRows: [],
 			selectedCols: []
@@ -49,7 +52,7 @@ export default {
 			this.$refs.cols_selector.add_items(this.selected_variables.filter(a => this.var_type[a] != "numeric"));
 		},
 		calc_table() {
-			this.$emit("calc-table-event", this.rows, this.cols);
+			this.$emit("calc-table-event", this.rows, this.cols, this.filter_mask);
 		}
 	}
 };
