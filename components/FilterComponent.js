@@ -22,7 +22,7 @@ export default {
 			return this.dataset_ref();
 		},
 		n() {
-			return sum(this.dataset.weight.filter((_, i) => this.mask[i]));
+			return round(sum(this.dataset.weight.filter((_, i) => this.mask[i])));
 		}
 	},
 	methods: {
