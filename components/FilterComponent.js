@@ -3,43 +3,18 @@
 import { sum } from "../utils.js";
 import { evaluate_filter } from "./filter_engine.js";
 
-// scoped styles
-const styles = {
-	dummy: { visibility: "hidden" },
-	flexCol: { flex: 1 }
-}
-
 export default {
-	template: `
-		<flex-row gap="0.5rem">
-			<button class="dummy" :style="styles.dummy">></button>
-			<flex-col gap="0.5rem" :style="styles.flexCol">
-				<h3>Filter</h3>
-				<input type="text" :class="{ filter_changed: applied_filter != filter_string }" v-model="filter_string" @keydown.enter="apply" placeholder="Enter condition here...">
-				<flex-col gap="0.5rem">
-					<flex-row gap="0.25rem" justify="space-between">
-						<flex-row gap="0.25rem">
-							<button @click="apply">Apply</button>
-							<button @click="reset">Reset</button>
-							<button @click="cancel" v-show="applied_filter != filter_string">Cancel</button>
-						</flex-row>
-						<span :class="{ filter_active: is_filter_active }">N = {{ n }}</span>
-					</flex-row>
-					<span :class="{ error: is_error }" v-show="is_error">{{ error_message }}</span>
-				</flex-col>
-			</flex-col>
-		</flex-row>
-	`,
+	template: "#filter-selector-template",
 	inject: ["dataset_ref"],
 	data() {
 		return {
+			closed: true,
 			filter_string: "",
 			mask: [],
 			applied_filter: "",
 			is_filter_active: false,
 			is_error: false,
-			error_message: "",
-			styles
+			error_message: ""
 		};
 	},
 	computed: {

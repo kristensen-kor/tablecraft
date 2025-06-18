@@ -79,7 +79,7 @@ export default {
 	},
 	mounted() {
 		// debug
-		this.handle_load_example("./10540-9.tds");
+		// this.handle_load_example("./10540-9.tds");
 		// this.handle_load_example("./General Social Survey 2000.tds");
 	},
 	watch: {

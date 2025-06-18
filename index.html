@@ -178,3 +178,30 @@
 		</div>
 	</div>
 </template>
+
+<template id="filter-selector-template">
+	<flex-row gap="0.5rem">
+		<button class="dummy">></button>
+		<flex-col gap="0.5rem" class="filter-area">
+			<flex-row justify="space-between" align="flex-end" class="filter-header" @click="closed = !closed">
+				<h3>
+					<span class="icon" :class="{ open: !closed }">❯</span>
+					<span>Filter</span>
+				</h3>
+				<span v-show="is_filter_active && closed" :class="{ filter_active: is_filter_active }">N = {{ n }}</span>
+			</flex-row>
+			<input type="text" v-if="!closed" :class="{ filter_changed: applied_filter != filter_string }" v-model="filter_string" @keydown.enter="apply" placeholder="Enter condition here...">
+			<flex-col gap="0.5rem" v-if="!closed">
+				<flex-row gap="0.25rem" justify="space-between">
+					<flex-row gap="0.25rem">
+						<button @click="apply">Apply</button>
+						<button @click="reset">Reset</button>
+						<button @click="cancel" v-show="applied_filter != filter_string">Cancel</button>
+					</flex-row>
+					<span :class="{ filter_active: is_filter_active }">N = {{ n }}</span>
+				</flex-row>
+				<span :class="{ error: is_error }" v-show="is_error">{{ error_message }}</span>
+			</flex-col>
+		</flex-col>
+	</flex-row>
+</template>
