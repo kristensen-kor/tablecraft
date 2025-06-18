@@ -99,7 +99,7 @@
 			<!-- <grid-rows class="variables-right" gap="1rem" template="1fr 3fr"> -->
 			<flex-col class="variables-right" gap="1rem">
 
-				<filter-component v-model:mask="filter_mask"></filter-component>
+				<filter-component class="filter-selector" v-model:mask="filter_mask"></filter-component>
 
 				<generic-selector ref="cols_selector" title="Columns" class="cols-selector" default_item="total" v-model:items="cols">
 					<button @click="add_to_columns">></button>

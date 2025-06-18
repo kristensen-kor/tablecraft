@@ -189,6 +189,26 @@ body {
 					& .rows-selector {
 						width: 80%;
 					}
+
+					& .filter-selector {
+						& .dummy {
+							font-size: 20px;
+						}
+
+						& .filter_active {
+							color: RoyalBlue;
+							font-weight: bold;
+						}
+
+						& .error {
+							color: red;
+						}
+
+						& .filter_changed {
+							border-color: DarkOrange;
+							outline-color: DarkOrange;
+						}
+					}
 				}
 			}
 
