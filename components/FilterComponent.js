@@ -1,6 +1,6 @@
 // FilterComponent.js
 
-import { sum } from "../utils.js";
+import { sum, round } from "../utils.js";
 import { evaluate_filter } from "./filter_engine.js";
 
 export default {
