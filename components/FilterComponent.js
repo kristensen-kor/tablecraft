@@ -1,13 +1,12 @@
 // FilterComponent.js
 
-import { load_template, load_CSS, sum, round } from "../utils.js";
+import { fetch_template, load_CSS, sum, round } from "../utils.js";
 import { evaluate_filter } from "./filter_engine.js";
 
 load_CSS("./components/FilterComponent.css");
-await load_template("filter-selector-template", "./components/FilterComponent.html");
 
 export default {
-	template: "#filter-selector-template",
+	template: await fetch_template("./components/FilterComponent.html"),
 	inject: ["dataset_ref"],
 	data() {
 		return {

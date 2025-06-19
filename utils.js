@@ -22,6 +22,11 @@ export async function load_template(id, path) {
 	}
 }
 
+export async function fetch_template(path) {
+	const response = await fetch(path);
+	return await response.text();
+}
+
 function betacf(x, a, b) {
 	const fpmin = 1e-30;
 	const qab = a + b;
