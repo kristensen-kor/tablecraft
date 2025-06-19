@@ -1,0 +1,56 @@
+/*FilterComponent.css*/
+
+#app {
+	& .filter-selector {
+		& .filter-area {
+			flex: 1;
+		}
+
+		& .filter-header {
+			cursor: pointer;
+
+			& h3 {
+				transition: text-shadow 0.2s ease;
+				user-select: none;
+				display: flex;
+				align-items: center;
+
+				& .icon {
+					width: 1.15rem;
+					line-height: 1;
+					text-align: center;
+					vertical-align: middle;
+					transition: transform 0.2s ease;
+					display: inline-block;
+				}
+
+				&:hover .icon:not(.open) { transform: scale(1.15); }
+				& .icon.open { transform: rotate(90deg); }
+				&:hover .icon.open { transform: rotate(90deg) scale(1.15); }
+			}
+
+			&:hover h3 {
+				text-shadow: 0 0 1px currentcolor;
+			}
+		}
+
+		& .dummy {
+			font-size: 20px;
+			visibility: hidden;
+		}
+
+		& .filter_active {
+			color: RoyalBlue;
+			font-weight: bold;
+		}
+
+		& .error {
+			color: Red;
+		}
+
+		& .filter_changed {
+			border-color: DarkOrange;
+			outline-color: DarkOrange;
+		}
+	}
+}

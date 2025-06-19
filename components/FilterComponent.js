@@ -1,7 +1,9 @@
 // FilterComponent.js
 
-import { sum, round } from "../utils.js";
+import { load_CSS, sum, round } from "../utils.js";
 import { evaluate_filter } from "./filter_engine.js";
+
+load_CSS("./components/FilterComponent.css");
 
 export default {
 	template: "#filter-selector-template",

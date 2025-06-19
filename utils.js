@@ -2,6 +2,16 @@ export const sum = xs => xs.reduce((a, b) => a + b, 0);
 
 export const round = (x, y = 0) => Number(x.toFixed(y));
 
+export function load_CSS(path) {
+	if (!document.querySelector(`link[href="${path}"]`)) {
+		const link = document.createElement("link");
+		link.rel = "stylesheet";
+		link.href = path;
+		document.head.appendChild(link);
+	}
+}
+
+
 function betacf(x, a, b) {
 	const fpmin = 1e-30;
 	const qab = a + b;
