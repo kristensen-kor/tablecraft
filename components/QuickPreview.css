@@ -1,5 +1,41 @@
 /*QuickPreview.css*/
 
 #app {
+	& .quick-preview {
+		min-height: 0;
+		flex: 1;
 
+		& .preview-table-container {
+			padding-left: 1ch;
+			font-family: monospace;
+			background-color: var(--bg_100);
+			overflow: auto;
+
+			& table {
+				& .underline_row td {
+					border-bottom: 1px dashed var(--primary_400);
+				}
+
+				& .data_row td {
+					vertical-align: top;
+				}
+
+				& td {
+					padding: 0 0.25rem;
+				}
+
+				& .al_right {
+					text-align: right;
+				}
+
+				& .col_code, .col_percent, .col_count {
+					text-align: right;
+				}
+
+				& .col_percent, .col_count {
+					padding-left: 2ch;
+				}
+			}
+		}
+	}
 }

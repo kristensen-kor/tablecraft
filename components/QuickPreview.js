@@ -1,6 +1,8 @@
 // QuickPreview.js
 
-import { round, calc_weighted_nominal, calc_weighted_mean } from "../utils.js";
+import { load_CSS, round, calc_weighted_nominal, calc_weighted_mean } from "../utils.js";
+
+load_CSS("./components/QuickPreview.css");
 
 export default {
 	template: "#qtable-template",
