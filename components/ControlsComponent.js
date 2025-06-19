@@ -1,13 +1,13 @@
 // ControlsComponent.js
 
-import { component_quick_preview } from "../component_quick_preview.js";
+import QuickPreview from "./QuickPreview.js";
 import GenericSelector from "./GenericSelector.js";
 import FilterComponent from "./FilterComponent.js";
 
 export default {
 	template: "#controls-template",
 	components: {
-		"quick_preview": component_quick_preview,
+		QuickPreview,
 		GenericSelector,
 		FilterComponent
 	},
