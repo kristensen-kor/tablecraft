@@ -11,6 +11,16 @@ export function load_CSS(path) {
 	}
 }
 
+export async function load_template(id, path) {
+	if (!document.getElementById(id)) {
+		const response = await fetch(path);
+		const html = await response.text();
+		const template = document.createElement("template");
+		template.innerHTML = html;
+		template.id = id;
+		document.body.appendChild(template);
+	}
+}
 
 function betacf(x, a, b) {
 	const fpmin = 1e-30;
