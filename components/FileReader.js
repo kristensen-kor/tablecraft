@@ -2,13 +2,12 @@
 
 export default {
 	template: `
-		<div>
+		<flex-col align="flex-start" gap="0.5rem" style="width: min-content;">
 			<textarea id="paste_area" :placeholder="placeholder" @paste="handle_paste" v-model="input" rows="10" cols="50" :class="{ red_error: is_error }"></textarea>
-			<br>
 			<input type="file" @change="handle_file_input" accept=".tds">
-			<br>
-			<button @click="handle_load_example('./General Social Survey 2000.tds')">Load Example 'General Social Survey 2000' Dataset</button>
-		</div>
+			<br><span>Load example datasets:</span>
+			<button @click="handle_load_example('./General Social Survey 2000.tds')">General Social Survey 2000</button>
+		</flex-col>
 	`,
 	data() {
 		return {
@@ -79,7 +78,7 @@ export default {
 	},
 	mounted() {
 		// debug
-		// this.handle_load_example("./10540-9.tds");
+		this.handle_load_example("./10540-9.tds");
 		// this.handle_load_example("./General Social Survey 2000.tds");
 	},
 	watch: {
