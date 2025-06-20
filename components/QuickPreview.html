@@ -1,0 +1,45 @@
+<!-- Template: quick-preview -->
+
+<grid-rows class="quick-preview" gap="0.5rem" template="auto 1fr">
+	<h3>Quick Preview</h3>
+	<div class="preview-table-container">
+		<div v-if="qtable !== null">
+			<div>{{ qtable.name }}</div>
+			<br>
+			<table v-if="qtable.table_type == 'categorical'">
+				<tbody>
+					<tr class="underline_row">
+						<td class="al_right"></td>
+						<td>{{ qtable.type }}</td>
+						<td class="al_right">%</td>
+						<td class="al_right">Count</td>
+					</tr>
+					<tr class="underline_row">
+						<td></td>
+						<td>Total</td>
+						<td></td>
+						<td class="col_count">{{ qtable.total }}</td>
+					</tr>
+					<tr v-for="row in qtable.data" class="data_row">
+						<td class="col_code">{{ row.code }}</td>
+						<td>{{ row.label }}</td>
+						<td class="col_percent">{{ row.percent }}</td>
+						<td class="col_count">{{ row.count }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<table v-if="qtable.table_type == 'mean'">
+				<tbody>
+					<tr class="underline_row">
+						<td class="al_right">total</td>
+						<td class="al_right">mean</td>
+					</tr>
+					<tr>
+						<td class="al_right">{{ qtable.total }}</td>
+						<td class="al_right">{{ qtable.mean }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</grid-rows>

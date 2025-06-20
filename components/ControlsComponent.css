@@ -1,0 +1,91 @@
+/*ControlsComponent.css*/
+
+#app {
+	& .controls-grid {
+		min-height: 0;
+
+		& .variables-block {
+			min-height: 0;
+			height: 100%;
+
+			& .variables-left {
+				min-height: 0;
+
+				& .variables-selector {
+					min-height: 0;
+					flex: 2;
+
+					& .search-input-wrapper input {
+						&::placeholder {
+							text-align: right;
+							filter: opacity(50%);
+						}
+
+						&:focus::placeholder { color: transparent; }
+					}
+
+					& select {
+/*							flex: 1;*/
+						overflow: auto;
+					}
+				}
+			}
+
+
+			& .variables-right {
+
+				& .cols-selector {
+					flex: 1;
+				}
+
+				& .rows-selector {
+					flex: 3;
+				}
+
+				& .cols-selector, .rows-selector {
+					display: grid;
+					grid-template-rows: auto 1fr auto;
+					grid-template-columns: auto 1fr auto;
+					gap: 0.5rem;
+					grid-template-areas:
+						". a ."
+						"b c d"
+						". e .";
+
+					& h3 {
+						grid-area: a;
+					}
+
+					& .add {
+						grid-area: b;
+
+						& button {
+							font-size: 20px;
+						}
+					}
+
+					& select {
+						grid-area: c;
+						overflow: auto;
+					}
+
+					& .arrows {
+						grid-area: d;
+					}
+
+					& .reset {
+						grid-area: e;
+					}
+				}
+
+				& .rows-selector {
+					width: 80%;
+				}
+			}
+		}
+
+		& .calc-button {
+			font-size: 18px;
+		}
+	}
+}

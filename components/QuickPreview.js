@@ -1,11 +1,11 @@
 // QuickPreview.js
 
-import { load_CSS, round, calc_weighted_nominal, calc_weighted_mean } from "../utils.js";
+import { fetch_template, load_CSS, round, calc_weighted_nominal, calc_weighted_mean } from "../utils.js";
 
 load_CSS("./components/QuickPreview.css");
 
 export default {
-	template: "#qtable-template",
+	template: await fetch_template("./components/QuickPreview.html"),
 	props: ["variables"],
 	inject: ["dataset_ref"],
 	computed: {

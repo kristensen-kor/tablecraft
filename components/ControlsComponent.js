@@ -1,11 +1,15 @@
 // ControlsComponent.js
 
+import { fetch_template, load_CSS } from "../utils.js";
+
 import QuickPreview from "./QuickPreview.js";
 import GenericSelector from "./GenericSelector.js";
 import FilterComponent from "./FilterComponent.js";
 
+load_CSS("./components/ControlsComponent.css");
+
 export default {
-	template: "#controls-template",
+	template: await fetch_template("./components/ControlsComponent.html"),
 	components: {
 		QuickPreview,
 		GenericSelector,

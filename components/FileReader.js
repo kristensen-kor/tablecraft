@@ -1,5 +1,9 @@
 // FileReader.js
 
+import { load_CSS } from "../utils.js";
+
+load_CSS("./components/FileReader.css");
+
 export default {
 	template: `
 		<flex-col align="flex-start" gap="0.5rem" style="width: min-content;">
@@ -78,7 +82,7 @@ export default {
 	},
 	mounted() {
 		// debug
-		// this.handle_load_example("./10540-9.tds");
+		this.handle_load_example("./10540-9.tds");
 		// this.handle_load_example("./General Social Survey 2000.tds");
 	},
 	watch: {

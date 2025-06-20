@@ -33,33 +33,7 @@ body {
 
 	padding: 1rem;
 
-	& #paste_area {
-/*		align-self: flex-start;*/
-		resize: none;
-	  	font-family: monospace;
-		background-color: var(--bg_100);
-		color: var(--primary_600);
-		border: 1px solid var(--primary_500);
-		border: 1px solid var(--bg_700);
-		outline: 0;
-		padding: 0.5rem;
-		border-radius: 4px;
-		font-size: 1rem;
 
-		&:hover {
-			border: 1px solid var(--secondary_300);
-			border: 1px solid var(--primary_500);
-		}
-
-		&:focus {
-			border: 1px solid var(--primary_500);
-			outline: 1px solid var(--primary_500);
-		}
-
-		&.red_error::placeholder {
-			color: Red;
-		}
-	}
 
 	& h2, h3 {
 		margin: 0;
@@ -69,94 +43,6 @@ body {
 
 	& .main-layout {
 		min-height: 0;
-
-		& .controls-grid {
-			min-height: 0;
-
-			& .variables-block {
-				min-height: 0;
-				height: 100%;
-
-				& .variables-left {
-					min-height: 0;
-
-					& .variables-selector {
-						min-height: 0;
-						flex: 2;
-
-						& .search-input-wrapper input {
-							&::placeholder {
-								text-align: right;
-								filter: opacity(50%);
-							}
-
-							&:focus::placeholder { color: transparent; }
-						}
-
-						& select {
-/*							flex: 1;*/
-							overflow: auto;
-						}
-					}
-				}
-
-
-				& .variables-right {
-
-					& .cols-selector {
-						flex: 1;
-					}
-
-					& .rows-selector {
-						flex: 3;
-					}
-
-					& .cols-selector, .rows-selector {
-						display: grid;
-						grid-template-rows: auto 1fr auto;
-						grid-template-columns: auto 1fr auto;
-						gap: 0.5rem;
-						grid-template-areas:
-							". a ."
-							"b c d"
-							". e .";
-
-						& h3 {
-							grid-area: a;
-						}
-
-						& .add {
-							grid-area: b;
-
-							& button {
-								font-size: 20px;
-							}
-						}
-
-						& select {
-							grid-area: c;
-							overflow: auto;
-						}
-
-						& .arrows {
-							grid-area: d;
-						}
-
-						& .reset {
-							grid-area: e;
-						}
-					}
-
-					& .rows-selector {
-						width: 80%;
-					}
-				}
-			}
-
-			& .calc-button {
-				font-size: 18px;
-			}
-		}
 
 		& .output {
 			min-height: 0;

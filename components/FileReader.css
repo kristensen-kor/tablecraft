@@ -1,0 +1,30 @@
+/*FileReader.css*/
+
+#app {
+	& #paste_area {
+		resize: none;
+		font-family: monospace;
+		background-color: var(--bg_100);
+		color: var(--primary_600);
+		border: 1px solid var(--primary_500);
+		border: 1px solid var(--bg_700);
+		outline: 0;
+		padding: 0.5rem;
+		border-radius: 4px;
+		font-size: 1rem;
+
+		&:hover {
+			border: 1px solid var(--secondary_300);
+			border: 1px solid var(--primary_500);
+		}
+
+		&:focus {
+			border: 1px solid var(--primary_500);
+			outline: 1px solid var(--primary_500);
+		}
+
+		&.red_error::placeholder {
+			color: Red;
+		}
+	}
+}
