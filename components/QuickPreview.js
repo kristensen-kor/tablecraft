@@ -8,11 +8,17 @@ export default {
 	template: await fetch_template("./components/QuickPreview.html"),
 	props: ["variables"],
 	inject: ["dataset_ref"],
+	data() {
+		return {
+			closed: false
+		};
+	},
 	computed: {
 		dataset() {
 			return this.dataset_ref();
 		},
 		qtable() {
+			if (this.closed) return null;
 			if (this.variables.length !== 1) return null;
 
 			const var_name = this.variables[0];

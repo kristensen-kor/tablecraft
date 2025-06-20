@@ -1,8 +1,11 @@
 <!-- Template: quick-preview -->
 
-<grid-rows class="quick-preview" gap="0.5rem" template="auto 1fr">
-	<h3>Quick Preview</h3>
-	<div class="preview-table-container">
+<grid-rows class="quick-preview" gap="0.5rem" template="auto 1fr" :class="{ visible: !closed }">
+	<h3 @click="closed = !closed">
+		<span class="icon" :class="{ open: !closed }">❯</span>
+		<span>Quick Preview</span>
+	</h3>
+	<div class="preview-table-container" v-if="!closed">
 		<div v-if="qtable !== null">
 			<div>{{ qtable.name }}</div>
 			<br>

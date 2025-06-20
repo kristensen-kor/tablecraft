@@ -3,7 +3,33 @@
 #app {
 	& .quick-preview {
 		min-height: 0;
-		flex: 1;
+
+		&.visible {
+			flex: 1;
+		}
+
+		& h3 {
+			cursor: pointer;
+			transition: text-shadow 0.2s ease;
+			user-select: none;
+
+			& .icon {
+				width: 1.15rem;
+				line-height: 1;
+				text-align: center;
+				vertical-align: middle;
+				transition: transform 0.2s ease;
+				display: inline-block;
+			}
+
+			&:hover .icon:not(.open) { transform: scale(1.15); }
+			& .icon.open { transform: rotate(90deg); }
+			&:hover .icon.open { transform: rotate(90deg) scale(1.15); }
+
+			&:hover {
+				text-shadow: 0 0 1px currentcolor;
+			}
+		}
 
 		& .preview-table-container {
 			padding-left: 1ch;

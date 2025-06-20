@@ -20,18 +20,14 @@
 						{{ var_full_label[variable] }}
 					</option>
 				</select>
-				<flex-row justify="space-between" align="center">
-					<button @click="clear_variables">Clear</button>
-					<button @click="switch_quick_preview">{{ quick_preview_visible ? "Hide Quick Preview" : "Show Quick Preview" }}</button>
-				</flex-row>
+				<button style="justify-self: start;" @click="clear_variables">Clear</button>
 			<!-- </flex-col> -->
 			</grid-rows>
 
-			<quick-preview v-if="quick_preview_visible" :variables="selected_variables"></quick-preview>
+			<quick-preview :variables="selected_variables"></quick-preview>
 
 		</flex-col>
 		<!-- </grid-rows> -->
-
 
 		<!-- <grid-rows class="variables-right" gap="1rem" template="1fr 3fr"> -->
 		<flex-col class="variables-right" gap="1rem">

@@ -18,7 +18,6 @@ export default {
 	props: ["var_list", "var_full_label", "var_type"],
 	data() {
 		return {
-			quick_preview_visible: true,
 			selected_variables: [],
 			rows: [],
 			cols: [],
@@ -37,9 +36,6 @@ export default {
 		}
 	},
 	methods: {
-		switch_quick_preview() {
-			this.quick_preview_visible = !this.quick_preview_visible;
-		},
 		clear_variables() {
 			this.selected_variables = [];
 		},
