@@ -41,7 +41,7 @@ export default {
 				const rows = row_values.map((code, i) => ({
 					code: code,
 					label: this.dataset.val_labels[var_name][code],
-					percent: round(result.percentages[i] * 100, 1),
+					percent: result.counts[i] == 0 ? 0 : (result.percentages[i] * 100).toFixed(1),
 					count: round(result.counts[i])
 				}));
 

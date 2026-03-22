@@ -2,7 +2,7 @@ import "exceljs";
 
 export async function export_table(table_data, name) {
 	let workbook = new ExcelJS.Workbook();
-	let worksheet = workbook.addWorksheet("Sheet 1");
+	let worksheet = workbook.addWorksheet("Sheet1");
 
 	worksheet.properties.defaultRowHeight = 14;
 

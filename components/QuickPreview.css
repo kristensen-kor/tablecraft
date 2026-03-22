@@ -12,6 +12,8 @@
 			cursor: pointer;
 			transition: text-shadow 0.2s ease;
 			user-select: none;
+			display: flex;
+			align-items: center;
 
 			& .icon {
 				width: 1.15rem;
