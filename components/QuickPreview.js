@@ -6,7 +6,7 @@ load_CSS("./components/QuickPreview.css");
 
 export default {
 	template: await fetch_template("./components/QuickPreview.html"),
-	props: ["variables"],
+	props: ["variables", "filter_mask"],
 	inject: ["dataset_ref"],
 	data() {
 		return {
@@ -26,7 +26,10 @@ export default {
 			const vec = this.dataset.data[var_name];
 			const weights = this.dataset.weight;
 
-			const data = weights.map((_, i) => ({"value": vec[i], "weight": weights[i]}));
+			const data = [];
+			for (let i = 0; i < weights.length; i++) {
+				if (this.filter_mask[i]) data.push({value: vec[i], weight: weights[i]});
+			}
 
 			let qtable = {};
 			qtable.name = this.dataset.var_full_label[var_name];
@@ -41,7 +44,7 @@ export default {
 				const rows = row_values.map((code, i) => ({
 					code: code,
 					label: this.dataset.val_labels[var_name][code],
-					percent: result.counts[i] == 0 ? 0 : (result.percentages[i] * 100).toFixed(1),
+					percent:  result.total == 0 ? "-" : (result.counts[i] == 0 ? 0 : (result.percentages[i] * 100).toFixed(1)),
 					count: round(result.counts[i])
 				}));
 
@@ -51,7 +54,7 @@ export default {
 				const result = calc_weighted_mean(data);
 
 				qtable.total = round(result.total);
-				qtable.mean = round(result.mean, 1);
+				qtable.mean = result.total == 0 ? "-" : round(result.mean, 1);
 			}
 
 			return qtable;

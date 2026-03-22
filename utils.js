@@ -109,14 +109,10 @@ export const calc_weighted_nominal = (data, row_values) => {
 		}
 	}
 
-	if (total == 0) {
-		const nan_vec = row_values.map(() => NaN);
-		return { total: 0, counts: nan_vec, percentages: nan_vec };
-	} else {
-		const counts = row_values.map(x => counts_map[x]);
-		const percentages = counts.map(x => x / total);
-		return { total, counts, percentages };
-	}
+	const counts = row_values.map(x => counts_map[x]);
+	const percentages = total == 0 ? row_values.map(() => NaN) : counts.map(x => x / total);
+	console.log({ total, counts, percentages });
+	return { total, counts, percentages };
 };
 
 export const calc_weighted_mean = (data) => {
