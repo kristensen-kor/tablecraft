@@ -1,0 +1,31 @@
+/*FilterHelpComponent.css*/
+
+& .filter-help-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.4);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+
+	& .help-modal {
+		background: white;
+		padding: 1rem;
+		border-radius: 8px;
+		max-width: 500px;
+		width: 90%;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+		position: relative;
+
+		& .close-btn {
+			position: absolute;
+			top: 0.5rem;
+			right: 0.5rem;
+			background: none;
+			border: none;
+			font-size: 1.2rem;
+			cursor: pointer;
+		}
+	}
+}

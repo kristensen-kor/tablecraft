@@ -17,6 +17,10 @@
 					<button @click="apply">Apply</button>
 					<button @click="reset">Reset</button>
 					<button @click="cancel" v-show="applied_filter != filter_string">Cancel</button>
+					<button @click="is_show_help = true">?</button>
+					<Teleport to="body">
+						<filter-help-component v-if="is_show_help" @close="is_show_help = false"></filter-help-component>
+					</Teleport>
 				</flex-row>
 				<span :class="{ filter_active: is_filter_active }">N = {{ n }}</span>
 			</flex-row>
@@ -24,3 +28,5 @@
 		</flex-col>
 	</flex-col>
 </flex-row>
+
+

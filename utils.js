@@ -111,7 +111,6 @@ export const calc_weighted_nominal = (data, row_values) => {
 
 	const counts = row_values.map(x => counts_map[x]);
 	const percentages = total == 0 ? row_values.map(() => NaN) : counts.map(x => x / total);
-	console.log({ total, counts, percentages });
 	return { total, counts, percentages };
 };
 

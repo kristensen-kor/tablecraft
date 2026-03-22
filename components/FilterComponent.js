@@ -3,10 +3,15 @@
 import { fetch_template, load_CSS, sum, round } from "../utils.js";
 import { evaluate_filter } from "./filter_engine.js";
 
+import FilterHelpComponent from "./FilterHelpComponent.js";
+
 load_CSS("./components/FilterComponent.css");
 
 export default {
 	template: await fetch_template("./components/FilterComponent.html"),
+	components: {
+		FilterHelpComponent
+	},
 	inject: ["dataset_ref"],
 	data() {
 		return {
@@ -16,7 +21,8 @@ export default {
 			applied_filter: "",
 			is_filter_active: false,
 			is_error: false,
-			error_message: ""
+			error_message: "",
+			is_show_help: false
 		};
 	},
 	computed: {
