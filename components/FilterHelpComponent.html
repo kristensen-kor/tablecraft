@@ -3,8 +3,28 @@
 <div class="filter-help-overlay" @click.self="$emit('close')">
 	<div class="help-modal">
 		<button class="close-btn" @click="$emit('close')">✕</button>
-		<div>
-			test text
-		</div>
+
+		<h2>Filter syntax help</h2>
+
+		<br>
+
+		<flex-row gap="2rem">
+			<flex-col>
+				<h3>Basic comparisons</h3>
+				<div v-for="(node, i) in basic_comparisons" :key="i" :class="node[0]">{{ node[1] }}</div>
+			</flex-col>
+
+			<flex-col>
+				<h3>Logical operations</h3>
+				<div v-for="(node, i) in logical_operations" :key="i" :class="node[0]">{{ node[1] }}</div>
+			</flex-col>
+
+			<flex-col>
+				<h3>Alternative syntax</h3>
+				<div v-for="(node, i) in alternative_syntax" :key="i" :class="node[0]">{{ node[1] }}</div>
+			</flex-col>
+		</flex-row>
+
+
 	</div>
 </div>

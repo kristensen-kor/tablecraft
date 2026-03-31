@@ -10,13 +10,29 @@
 	z-index: 1000;
 
 	& .help-modal {
-		background: white;
+		background: var(--bg_900);
+		color: var(--primary_100);
 		padding: 1rem;
 		border-radius: 8px;
-		max-width: 500px;
-		width: 90%;
-		box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 		position: relative;
+
+		& h3 {
+			color: var(--primary_300);
+		}
+
+		& .text {
+			margin-top: 0.75rem;
+		}
+
+		& .code {
+			margin-top: 0.25rem;
+			font-family: "Consolas";
+			color: var(--bg_400);
+			background: #191818;
+			padding: 4px;
+			border-radius: 4px;
+		}
 
 		& .close-btn {
 			position: absolute;
