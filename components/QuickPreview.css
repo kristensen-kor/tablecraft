@@ -39,6 +39,17 @@
 			background-color: var(--bg_100);
 			overflow: auto;
 
+			& .icon_copy {
+				padding: 4px;
+				line-height: 1;
+				font-size: 1.5rem;
+				cursor: pointer;
+
+				&:hover {
+					text-shadow: 0 0 1px currentcolor;
+				}
+			}
+
 			& table {
 				& .underline_row td {
 					border-bottom: 1px dashed var(--primary_400);

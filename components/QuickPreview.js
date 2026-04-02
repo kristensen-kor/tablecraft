@@ -59,5 +59,35 @@ export default {
 
 			return qtable;
 		}
+	},
+	methods: {
+		copy() {
+			if (!this.qtable) return;
+
+			let text;
+
+			if (this.qtable.table_type == "categorical") {
+				let lines = [];
+				lines.push(["", this.qtable.type, "%", "Count"].join("\t"));
+				lines.push(["", "Total", "", this.qtable.total].join("\t"));
+
+				for (const row of this.qtable.data) {
+					lines.push([row.code, row.label, row.percent, row.count].join("\t"));
+				}
+
+				text = lines.join("\n");
+			}
+
+			if (this.qtable.table_type == "mean") {
+				text = [
+					["total", "mean"].join("\t"),
+					[this.qtable.total, this.qtable.mean].join("\t")
+				].join("\n");
+			}
+
+			text = this.qtable.name + "\n" + text;
+
+			navigator.clipboard.writeText(text);
+		}
 	}
 };

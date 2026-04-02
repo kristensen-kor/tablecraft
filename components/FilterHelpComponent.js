@@ -32,7 +32,6 @@ export default {
 				["code", "age > 30 && gender == 1"],
 				["text", "Match either condition (logical OR)"],
 				["code", "gender == 1 || age < 25"],
-				["code", "gender == 1 | age < 25"],
 				["text", "Group conditions"],
 				["code", "(age > 30 && gender == 1) || age < 25"],
 				["text", "Negate a condition (logical NOT)"],
