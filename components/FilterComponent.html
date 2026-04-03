@@ -13,7 +13,7 @@
 		<input type="text" v-if="!closed" :class="{ filter_changed: applied_filter != filter_string }" v-model="filter_string" @keydown.enter="apply" placeholder="Enter condition here...">
 		<flex-col gap="0.5rem" v-if="!closed">
 			<flex-row gap="0.25rem" justify="space-between">
-				<flex-row gap="0.25rem">
+				<flex-row gap="0.25rem" align="flex-start">
 					<button @click="apply">Apply</button>
 					<button @click="reset">Reset</button>
 					<button @click="cancel" v-show="applied_filter != filter_string">Cancel</button>
