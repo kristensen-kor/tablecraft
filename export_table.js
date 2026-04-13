@@ -52,6 +52,12 @@ export async function export_table(table_data, name) {
 	table_data.col_header.forEach((x, row_id) => add_row_to_worksheet(x, row_id, true))
 	table_data.table.forEach((x, row_id) => add_row_to_worksheet(x, row_id));
 
+	// add filter indication
+	if (table_data.filter_string && table_data.filter_string !== "") {
+		worksheet.getCell("A1").value = `Filter: ${table_data.filter_string}`;
+		worksheet.getCell("A1").font.italic = true;
+	}
+
 	const blob = await workbook.xlsx.writeBuffer();
 	let link = document.createElement("a");
 	link.href = URL.createObjectURL(new Blob([blob], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
