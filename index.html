@@ -39,6 +39,7 @@
 						<button @click="download" :disabled="calculating_table || table_data == null">Download</button>
 						<button @click="reset_table" :disabled="table_data == null">Clear table</button>
 					</flex-row>
+					<div v-if="table_data !== null && table_data.filter_string !== ''">Filter: {{ table_data.filter_string }}</div>
 					<flex-row v-if="calculating_table" gap="0.5rem" justify="space-between" align="center">
 						<progress :value="progress" :max="100" style="flex: 1;"></progress>
 						<span>{{ progress }}%</span>
@@ -61,104 +62,6 @@
 </body>
 </html>
 
-
-<template id="controls-template">
-	<flex-col class="controls-grid" gap="1rem" justify="space-between">
-		<grid-cols class="variables-block" gap="0.5rem" template="3fr 2fr">
-
-			<flex-col class="variables-left" gap="1rem">
-			<!-- <grid-rows class="variables-left" gap="1rem" template="2fr 1fr"> -->
-
-				<grid-rows class="variables-selector" gap="0.5rem" template="auto 1fr auto">
-				<!-- <flex-col class="variables-selector" gap="0.5rem"> -->
-					<flex-row justify="space-between" align="center">
-						<h3>Variables</h3>
-						<flex-row class="search-input-wrapper" gap="2px">
-							<input type="text" v-model="search_term" placeholder="🔎"></input>
-							<button :class="{ visibility_hidden: !search_term }" @click="clear_search">⨉</button>
-						</flex-row>
-					</flex-row>
-					<select multiple v-model="selected_variables" @keydown.enter="add_to_rows" @keydown.right.prevent="add_to_columns">
-						<option v-for="(variable, index) in filtered_var_list" :key="variable" :value="variable" @dblclick="add_row(variable)">
-							{{ var_full_label[variable] }}
-						</option>
-					</select>
-					<flex-row justify="space-between" align="center">
-						<button @click="clear_variables">Clear</button>
-						<button @click="switch_quick_preview">{{ quick_preview_visible ? "Hide Quick Preview" : "Show Quick Preview" }}</button>
-					</flex-row>
-				<!-- </flex-col> -->
-				</grid-rows>
-
-				<quick-preview v-if="quick_preview_visible" :variables="selected_variables"></quick-preview>
-
-			</flex-col>
-			<!-- </grid-rows> -->
-
-
-			<!-- <grid-rows class="variables-right" gap="1rem" template="1fr 3fr"> -->
-			<flex-col class="variables-right" gap="1rem">
-
-				<filter-component class="filter-selector" v-model:mask="filter_mask"></filter-component>
-
-				<generic-selector ref="cols_selector" title="Columns" class="cols-selector" default_item="total" v-model:items="cols">
-					<button @click="add_to_columns">></button>
-				</generic-selector>
-
-				<generic-selector ref="rows_selector" title="Rows" class="rows-selector" v-model:items="rows">
-					<button @click="add_to_rows">></button>
-				</generic-selector>
-
-			</flex-col>
-			<!-- </grid-rows> -->
-
-		</grid-cols>
-
-		<button class="calc-button" @click="calc_table" :disabled="rows.length == 0 || cols.length == 0">Calc</button>
-	</flex-col>
-</template>
-
-<template id="qtable-template">
-	<grid-rows class="quick-preview" gap="0.5rem" template="auto 1fr">
-		<h3>Quick Preview</h3>
-		<div class="preview-table-container">
-			<div v-if="qtable !== null">
-				<div>{{ qtable.name }}</div>
-				<br>
-				<table v-if="qtable.table_type == 'categorical'">
-					<tr class="underline_row">
-						<td class="al_right"></td>
-						<td>{{ qtable.type }}</td>
-						<td class="al_right">%</td>
-						<td class="al_right">Count</td>
-					</tr>
-					<tr class="underline_row">
-						<td></td>
-						<td>Total</td>
-						<td></td>
-						<td class="col_count">{{ qtable.total }}</td>
-					</tr>
-					<tr v-for="row in qtable.data" class="data_row">
-						<td class="col_code">{{ row.code }}</td>
-						<td>{{ row.label }}</td>
-						<td class="col_percent">{{ row.percent }}</td>
-						<td class="col_count">{{ row.count }}</td>
-					</tr>
-				</table>
-				<table v-if="qtable.table_type == 'mean'">
-					<tr class="underline_row">
-						<td class="al_right">total</td>
-						<td class="al_right">mean</td>
-					</tr>
-					<tr>
-						<td class="al_right">{{ qtable.total }}</td>
-						<td class="al_right">{{ qtable.mean }}</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-	</grid-rows>
-</template>
 
 <template id="generic-selector-template">
 	<div>

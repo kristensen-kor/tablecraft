@@ -13,7 +13,7 @@ function prepare_col_vars_values(col_vars, val_labels) {
 }
 
 self.addEventListener("message", function(e) {
-	const { dataset, row_vars, col_vars, filter_mask } = e.data;
+	const { dataset, row_vars, col_vars, filter_mask, filter_string } = e.data;
 
 	let all_results = {};
 	row_vars.forEach(row_var => {
@@ -142,5 +142,5 @@ self.addEventListener("message", function(e) {
 		}
 	});
 
-	self.postMessage({ type: "result", result: { col_header: table_col_header, table } });
+	self.postMessage({ type: "result", result: { col_header: table_col_header, table, filter_string } });
 });

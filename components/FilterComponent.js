@@ -68,6 +68,12 @@ export default {
 				this.$emit("update:mask", value);
 			},
 			immediate: true
+		},
+		applied_filter: {
+			handler: function(value) {
+				this.$emit("update:current_filter_string", value);
+			},
+			immediate: true
 		}
 	},
 	mounted() {

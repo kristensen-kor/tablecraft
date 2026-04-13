@@ -22,6 +22,7 @@ export default {
 			rows: [],
 			cols: [],
 			filter_mask: [],
+			filter_string: "",
 			search_term: "",
 			selectedRows: [],
 			selectedCols: []
@@ -52,7 +53,7 @@ export default {
 			this.$refs.cols_selector.add_items(this.selected_variables.filter(a => this.var_type[a] != "numeric"));
 		},
 		calc_table() {
-			this.$emit("calc-table-event", this.rows, this.cols, this.filter_mask);
+			this.$emit("calc-table-event", this.rows, this.cols, this.filter_mask, this.filter_string);
 		}
 	}
 };

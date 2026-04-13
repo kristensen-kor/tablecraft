@@ -27,10 +27,10 @@ const app_config = {
 			this.table_data = null;
 			this.dataset = null;
 		},
-		calc_table(row_vars, col_vars, filter_mask) {
+		calc_table(row_vars, col_vars, filter_mask, filter_string) {
 			this.progress = 0;
 			this.calculating_table = true;
-			worker.postMessage({ dataset: toRaw(this.dataset), row_vars: toRaw(row_vars), col_vars: toRaw(col_vars), filter_mask: toRaw(filter_mask) });
+			worker.postMessage({ dataset: toRaw(this.dataset), row_vars: toRaw(row_vars), col_vars: toRaw(col_vars), filter_mask: toRaw(filter_mask), filter_string: toRaw(filter_string) });
 		},
 		reset_table() {
 			this.table_data = null;
